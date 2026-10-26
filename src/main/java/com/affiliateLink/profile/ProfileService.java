@@ -3,28 +3,40 @@ package com.affiliateLink.profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.affiliateLink.profile.exception.EmailAlreadyExistsException;
+import com.affiliateLink.profile.exception.ProfileNotFoundException;
+
 @Service 
-@Transactional 
 public class ProfileService {
+
     private final ProfileRepository profileRepository;
 
     public ProfileService(ProfileRepository profileRepository){
         this.profileRepository = profileRepository;
     }
 
-    public Publisher createPublisher(String email,String firstName , String lastName , String niche , String bio , String country){
-        validateEmailAvailability(email);
-        Publisher publisher = new Publisher(email, firstName, lastName, niche, bio, country);
-        return profileRepository.save(publisher);
+    @Transactional 
+    public void changeStatus(Long id){
+        Profile profile = profileRepository.findById(id)
+            .orElseThrow(() -> 
+                new ProfileNotFoundException("Profil introuvable avec l'id : " + id));
+
+        switch (profile.getStatus()) {
+            case PENDING:
+                profile.activate();
+                break;
+        
+            case ACTIVE:
+                profile.suspend();
+                break;
+        
+            case SUSPENDED:
+                profile.pend();
+                break;
+        }
     }
 
-    public Advertiser createAdvertiser(String email , String companyName , String sector , String website){
-        validateEmailAvailability(email);
-        Advertiser advertiser = new Advertiser(email, companyName, sector, website);
-        return profileRepository.save(advertiser);
-    }
-
-    private void validateEmailAvailability(String email) {
+    public void validateEmailAvailability(String email) {
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException(
                     "L'adresse e-mail est obligatoire."
@@ -32,7 +44,7 @@ public class ProfileService {
         }
 
         if (profileRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException(
+            throw new EmailAlreadyExistsException(
                     "Cette adresse e-mail est déjà utilisée."
             );
         }
