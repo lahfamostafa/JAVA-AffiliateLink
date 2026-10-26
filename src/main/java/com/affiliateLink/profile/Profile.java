@@ -56,4 +56,16 @@ public abstract class Profile {
         return createdAt;
     }
 
+    public void activate() {
+        this.status = ProfileStatus.ACTIVE;
+    }
+
+    public void suspend() {
+        this.status = ProfileStatus.SUSPENDED;
+    }
+
+    public void pend() {
+        this.status = ProfileStatus.PENDING;
+    }
+
 }

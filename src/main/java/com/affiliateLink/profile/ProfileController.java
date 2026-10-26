@@ -56,3 +56,28 @@ public class ProfileController {
         return advertiserService.getAdvertisers();
     }
 
+    @GetMapping("/advertisers/{id}")
+    public ResponseEntity<?> getAdvertiser(@PathVariable Long id) {
+        Optional<Advertiser> advertiser = advertiserService.getAdvertiser(id);
+        if (advertiser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(advertiser.get());
+    }
+    
+    @GetMapping("/publishers/{id}")
+    public ResponseEntity<?> getPublisher(@PathVariable Long id) {
+        Optional<Publisher> publisher = publisherService.getPublisher(id);
+        if (publisher.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(publisher.get());
+    }
+    
+    @PatchMapping("/admin/profiles/{id}/status")
+    public ResponseEntity<Void> changeStatus(@PathVariable Long id){
+        profileService.changeStatus(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+}
