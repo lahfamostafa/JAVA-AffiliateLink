@@ -40,10 +40,6 @@ public abstract class Profile {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -54,10 +50,6 @@ public abstract class Profile {
 
     public ProfileStatus getStatus() {
         return status;
-    }
-
-    public void setStatus(ProfileStatus status) {
-        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {
