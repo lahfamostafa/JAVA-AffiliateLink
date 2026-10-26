@@ -1,3 +1,5 @@
+package com.affiliateLink.profile;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,3 +46,13 @@ public class ProfileController {
         return advertiserService.save(request.email(), request.companyName(), request.sector(), request.website());
     }
     
+    @GetMapping("/publishers")
+    public List<Publisher> getPublishers() {
+        return publisherService.getPublishers();
+    }
+
+    @GetMapping("/advertisers")
+    public List<Advertiser> getAdvertisers() {
+        return advertiserService.getAdvertisers();
+    }
+
