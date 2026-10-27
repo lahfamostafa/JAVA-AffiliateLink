@@ -1,4 +1,4 @@
-package com.affiliateLink.profile.exception;
+package com.affiliateLink.exception;
 
 public class ProfileNotFoundException extends RuntimeException {
 

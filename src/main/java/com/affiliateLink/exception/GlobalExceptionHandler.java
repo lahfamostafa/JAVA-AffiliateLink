@@ -1,4 +1,4 @@
-package com.affiliateLink.profile.exception;
+package com.affiliateLink.exception;
 
 import java.util.Map;
 import java.util.stream.Collectors;
