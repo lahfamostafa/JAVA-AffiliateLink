@@ -1,25 +1,16 @@
-package com.affiliateLink.profile;
+package com.affiliateLink.profile.Controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.affiliateLink.profile.dto.AdvertiserRequest;
-import com.affiliateLink.profile.dto.PublisherRequest;
-
+import com.affiliateLink.profile.Entity.Advertiser;
+import com.affiliateLink.profile.Entity.Publisher;
+import com.affiliateLink.profile.Service.AdvertiserService;
+import com.affiliateLink.profile.Service.ProfileService;
+import com.affiliateLink.profile.Service.PublisherService;
+import com.affiliateLink.profile.dto.*;
 import jakarta.validation.Valid;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
+import java.util.*;
+import org.springframework.http.*;
 
 @RestController 
 @RequestMapping("/api")
