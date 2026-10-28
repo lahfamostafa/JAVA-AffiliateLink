@@ -1,4 +1,4 @@
-package com.affiliateLink.profile;
+package com.affiliateLink.profile.Entity;
 
 import java.time.LocalDateTime;
 
@@ -66,6 +66,18 @@ public abstract class Profile {
 
     public void pend() {
         this.status = ProfileStatus.PENDING;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setStatus(ProfileStatus status) {
+        this.status = status;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
 }

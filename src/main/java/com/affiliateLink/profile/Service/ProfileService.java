@@ -1,10 +1,12 @@
-package com.affiliateLink.profile;
+package com.affiliateLink.profile.Service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.affiliateLink.exception.EmailAlreadyExistsException;
 import com.affiliateLink.exception.ProfileNotFoundException;
+import com.affiliateLink.profile.Entity.Profile;
+import com.affiliateLink.profile.Repository.ProfileRepository;
 
 @Service 
 public class ProfileService {
