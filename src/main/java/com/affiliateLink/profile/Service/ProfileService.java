@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.affiliateLink.exception.EmailAlreadyExistsException;
 import com.affiliateLink.exception.ProfileNotFoundException;
 import com.affiliateLink.profile.Entity.Profile;
+import com.affiliateLink.profile.Entity.ProfileStatus;
 import com.affiliateLink.profile.Repository.ProfileRepository;
 
 @Service 
@@ -23,19 +24,9 @@ public class ProfileService {
             .orElseThrow(() -> 
                 new ProfileNotFoundException("Profil introuvable avec l'id : " + id));
 
-        switch (profile.getStatus()) {
-            case PENDING:
-                profile.activate();
-                break;
-        
-            case ACTIVE:
-                profile.suspend();
-                break;
-        
-            case SUSPENDED:
-                profile.pend();
-                break;
-        }
+        if (profile.getStatus().equals(ProfileStatus.ACTIVE)) {
+            profile.suspend();
+        }else profile.activate();
     }
 
     public void validateEmailAvailability(String email) {
