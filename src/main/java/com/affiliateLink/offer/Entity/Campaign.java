@@ -8,29 +8,39 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity 
-@Table (name = "campaigns")
+@Table(name = "campaigns")
 @Getter 
 @Setter 
 public class Campaign {
-    @Id 
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column (nullable = false)
     private String name;
 
-    @Column (nullable = false)
+    @Column (name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    @Column (nullable = false)
+    @Column (name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Column (nullable = false)
+    @Column (nullable = false, precision = 12, scale = 2)
     private BigDecimal budget;
 
-    @Column (nullable = false)
-    private String payoutModel;
+    @Enumerated(EnumType.STRING)
+    @Column (name = "payout_model", nullable = false)
+    private PayoutModel payoutModel;
 
-    @Column (nullable = false)
-    private CampaignStatus status;
+    @Column (name = "payout_value", nullable = false, precision = 12, scale = 2)
+    private BigDecimal payoutValue;
+
+    @Enumerated(EnumType.STRING)
+    @Column (nullable = false, length = 20)
+    private CampaignStatus status = CampaignStatus.DRAFT;
+
+    @ManyToOne(fetch = FetchType.LAZY , optional = false)
+    @JoinColumn (name = "offer_id",nullable = false)
+    private Offer offer ;
 }
