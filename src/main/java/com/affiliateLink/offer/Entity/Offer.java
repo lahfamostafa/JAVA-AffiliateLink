@@ -56,6 +56,10 @@ public class Offer {
         this.tags = tags;
     }
 
+    protected Offer(){
+        
+    }
+
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {

@@ -1,12 +1,11 @@
 package com.affiliateLink.offer.Controller;
 
 import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.affiliateLink.offer.Entity.Offer;
 import com.affiliateLink.offer.Service.OfferService;
 import com.affiliateLink.offer.dto.OfferRequest;
+import com.affiliateLink.offer.dto.OfferResponse;
 
 import jakarta.validation.Valid;
 
@@ -22,7 +21,7 @@ public class OfferContoller {
 
     @PostMapping("/offres")
     @ResponseStatus(HttpStatus.CREATED)
-    public Offer createOffer(@Valid @RequestBody OfferRequest request){
+    public OfferResponse createOffer(@Valid @RequestBody OfferRequest request){
         return offerService.save(request);
     }
 }
