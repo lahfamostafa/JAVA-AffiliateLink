@@ -9,6 +9,8 @@ import com.affiliateLink.offer.dto.OfferResponse;
 
 import jakarta.validation.Valid;
 
+
+
 @RestController 
 @RequestMapping ("/api") 
 public class OfferContoller {
@@ -24,4 +26,11 @@ public class OfferContoller {
     public OfferResponse createOffer(@Valid @RequestBody OfferRequest request){
         return offerService.save(request);
     }
+
+    @GetMapping("/offres/{id}")
+    public OfferResponse getOffer(@PathVariable("id") Long offerId) {
+        return offerService.findOfferId(offerId);
+    }
+    
+    
 }
