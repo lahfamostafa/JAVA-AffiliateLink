@@ -1,8 +1,9 @@
-package com.affiliateLink.profile;
+package com.affiliateLink.profile.Service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.affiliateLink.profile.AdvertiserProfileApi;
 import com.affiliateLink.profile.Entity.ProfileStatus;
 import com.affiliateLink.profile.Repository.AdvertiserRepository;
 
