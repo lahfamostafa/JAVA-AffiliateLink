@@ -2,6 +2,26 @@ package com.affiliateLink.offer.dto;
 
 import java.util.Set;
 
-public record OfferRequest(Long advertiserId, String titre, String description, String landingUrl, String niche ,Set<String> tags) {
-    
-}
+import org.hibernate.validator.constraints.URL;
+
+import jakarta.validation.constraints.*;
+
+public record OfferRequest(
+    @NotNull 
+    Long advertiserId,
+
+    @NotBlank
+    String titre,
+
+    @NotBlank
+    String description,
+
+    @NotBlank 
+    @URL 
+    String landingUrl,
+
+    @NotBlank
+    String niche,
+
+    Set<String> tags
+) {}
