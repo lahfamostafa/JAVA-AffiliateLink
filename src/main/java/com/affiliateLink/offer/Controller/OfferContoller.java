@@ -32,5 +32,8 @@ public class OfferContoller {
         return offerService.findOfferId(offerId);
     }
     
-    
+    @PutMapping("offres/{id}")
+    public OfferResponse modifieOffer(@PathVariable Long id, @Valid @RequestBody OfferRequest request) {        
+        return offerService.updateOffer(id, request);
+    }
 }
