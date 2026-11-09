@@ -1,4 +1,4 @@
 @org.springframework.modulith.ApplicationModule(
-    allowedDependencies = "profile"
+    allowedDependencies = {"profile", "exception"}
 )
 package com.affiliateLink.offer;
