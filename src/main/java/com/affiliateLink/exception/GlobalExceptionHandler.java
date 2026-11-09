@@ -24,4 +24,14 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(Map.of("message", errors));
     }
+
+    @ExceptionHandler(OfferAlreadyExistsException.class)
+    public ResponseEntity<String> handleOfferAlreadyExists(OfferAlreadyExistsException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(OfferNotExistsException.class)
+    public ResponseEntity<String> handleOfferNotExists(OfferNotExistsException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }
