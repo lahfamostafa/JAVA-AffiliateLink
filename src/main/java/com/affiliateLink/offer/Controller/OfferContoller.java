@@ -9,10 +9,8 @@ import com.affiliateLink.offer.dto.OfferResponse;
 
 import jakarta.validation.Valid;
 
-
-
 @RestController 
-@RequestMapping ("/api") 
+@RequestMapping ("/api/offres") 
 public class OfferContoller {
 
     private final OfferService offerService;
@@ -21,18 +19,18 @@ public class OfferContoller {
         this.offerService = offerService;
     }
 
-    @PostMapping("/offres")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OfferResponse createOffer(@Valid @RequestBody OfferRequest request){
         return offerService.save(request);
     }
 
-    @GetMapping("/offres/{id}")
+    @GetMapping("/{id}")
     public OfferResponse getOffer(@PathVariable("id") Long offerId) {
         return offerService.findOfferId(offerId);
     }
     
-    @PutMapping("offres/{id}")
+    @PutMapping("/{id}")
     public OfferResponse modifieOffer(@PathVariable Long id, @Valid @RequestBody OfferRequest request) {        
         return offerService.updateOffer(id, request);
     }

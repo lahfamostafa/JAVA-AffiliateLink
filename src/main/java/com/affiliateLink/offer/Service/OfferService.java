@@ -27,6 +27,12 @@ public class OfferService {
         this.tagService = tagService;
     }
 
+    public Offer findById(Long id){
+        return offerRepository.findById(id).orElseThrow(() -> 
+            new OfferNotExistsException("L'offre n'existe pas!")
+        );
+    }
+
     @Transactional 
     public OfferResponse save(OfferRequest request){
         if (offerRepository.existsByAdvertiserIdAndTitle(request.advertiserId(), request.titre())) {

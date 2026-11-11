@@ -56,14 +56,20 @@ public class Offer {
         this.tags = tags;
     }
 
-    protected Offer(){
-        
-    }
+    protected Offer(){}
 
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
+    }
+
+    public void addCampaign(Campaign campaign) {
+        campaigns.add(campaign);
+    }
+
+    public void removeCampaign(Campaign campaign) {
+        campaigns.remove(campaign);
     }
 }
