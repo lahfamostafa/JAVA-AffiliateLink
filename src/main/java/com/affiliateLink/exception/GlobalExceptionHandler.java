@@ -1,7 +1,7 @@
 package com.affiliateLink.exception;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,32 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
-        String errors = ex.getBindingResult().getFieldErrors().stream()
-            .map(error -> error.getField() + ": " + error.getDefaultMessage())
-            .distinct().collect(Collectors.joining("; "));
+    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
+        Map<String,String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+            errors.put(error.getField(), error.getDefaultMessage())
+        );
 
-        return ResponseEntity.badRequest().body(Map.of("message", errors));
+        return ResponseEntity.badRequest().body(Map.of(
+            "status",400,
+            "error","Bad Request",
+            "message","Les données envoyées sont invalides",
+            "details",errors
+        ));
+    }
+
+    @ExceptionHandler(OfferAlreadyExistsException.class)
+    public ResponseEntity<Map<String,String>> handleOfferAlreadyExists(OfferAlreadyExistsException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(OfferNotExistsException.class)
+    public ResponseEntity<Map<String,String>> handleOfferNotExists(OfferNotExistsException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(CamaignStatusException.class)
+    public ResponseEntity<Map<String,String>> handleCampaignStatus(CamaignStatusException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
     }
 }

@@ -1,0 +1,91 @@
+package com.affiliateLink.offer.Service;
+
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.affiliateLink.exception.OfferAlreadyExistsException;
+import com.affiliateLink.exception.OfferNotExistsException;
+import com.affiliateLink.exception.ProfileNotFoundException;
+import com.affiliateLink.offer.Entity.Offer;
+import com.affiliateLink.offer.Entity.Tag;
+import com.affiliateLink.offer.Repository.OfferRepository;
+import com.affiliateLink.offer.dto.OfferRequest;
+import com.affiliateLink.offer.dto.OfferResponse;
+import com.affiliateLink.profile.AdvertiserProfileApi;
+
+@Service 
+public class OfferService {
+    private final OfferRepository offerRepository;
+    private final AdvertiserProfileApi impl;
+    private final TagService tagService;
+
+    public OfferService(OfferRepository offerRepository , AdvertiserProfileApi impl, TagService tagService){
+        this.offerRepository = offerRepository;
+        this.impl = impl;
+        this.tagService = tagService;
+    }
+
+    public Offer findById(Long id){
+        return offerRepository.findById(id).orElseThrow(() -> 
+            new OfferNotExistsException("L'offre n'existe pas!")
+        );
+    }
+
+    @Transactional 
+    public OfferResponse save(OfferRequest request){
+        if (offerRepository.existsByAdvertiserIdAndTitle(request.advertiserId(), request.titre())) {
+            throw new OfferAlreadyExistsException("Cette offre existe déjà pour cet annonceur");
+        }
+        if (!impl.isActiveAdvertiser(request.advertiserId())) {
+            throw new IllegalArgumentException("Annonceur introuvable ou désactivé");
+        }
+        Set<Tag> tags = tagService.getOrCreateTags(request.tags());
+
+        Offer savedOffer = offerRepository.save(new Offer(request.advertiserId(), request.titre(), request.description(), request.landingUrl(), request.niche() , tags));
+        OfferResponse response = new OfferResponse(savedOffer.getId(), savedOffer.getAdvertiserId(), savedOffer.getTitle(), savedOffer.getDescription(), savedOffer.getLandingUrl(), savedOffer.getNiche(), savedOffer.getCreatedAt(), tags);
+        return response;
+    }
+
+    public OfferResponse findOfferId(Long offerId){
+        Offer offer = offerRepository.findById(offerId)
+            .orElseThrow(()->
+                new OfferNotExistsException("L'offre n'existe pas!")
+            );
+
+        return new OfferResponse(offerId, offer.getAdvertiserId(), offer.getTitle(), offer.getDescription(), offer.getLandingUrl(), offer.getNiche(), offer.getCreatedAt(), offer.getTags());
+    }
+
+    @Transactional 
+    public OfferResponse updateOffer(Long id, OfferRequest request){
+        Offer offer = offerRepository.findById(id).orElseThrow(()->
+            new OfferNotExistsException("L'offre n'existe pas!")
+        );
+
+        if(!impl.isActiveAdvertiser(request.advertiserId())){
+            throw new ProfileNotFoundException("Annonceur introuvable ou désactivé");
+        }
+
+        offer.setAdvertiserId(request.advertiserId());
+        offer.setTitle(request.titre());
+        offer.setDescription(request.description());
+        offer.setLandingUrl(request.landingUrl());
+        offer.setNiche(request.niche());
+
+        Set<Tag> tags = tagService.getOrCreateTags(request.tags());
+        offer.setTags(tags);
+
+        Offer updatedOffer = offerRepository.save(offer);
+        return new OfferResponse(
+            updatedOffer.getId(), 
+            updatedOffer.getAdvertiserId(), 
+            updatedOffer.getTitle(), 
+            updatedOffer.getDescription(), 
+            updatedOffer.getLandingUrl(), 
+            updatedOffer.getNiche(), 
+            updatedOffer.getCreatedAt(), 
+            tags
+        );
+    }
+}

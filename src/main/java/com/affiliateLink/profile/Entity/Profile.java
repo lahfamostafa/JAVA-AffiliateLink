@@ -64,10 +64,6 @@ public abstract class Profile {
         this.status = ProfileStatus.SUSPENDED;
     }
 
-    public void pend() {
-        this.status = ProfileStatus.PENDING;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
