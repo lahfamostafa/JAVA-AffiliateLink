@@ -3,14 +3,14 @@ package com.affiliateLink.offer.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.affiliateLink.exception.CamaignStatusException;
+
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity 
 @Table(name = "campaigns")
 @Getter 
-@Setter 
 public class Campaign {
 
     @Id
@@ -43,4 +43,53 @@ public class Campaign {
     @ManyToOne(fetch = FetchType.LAZY , optional = false)
     @JoinColumn (name = "offer_id",nullable = false)
     private Offer offer ;
+
+    public Campaign(String name, LocalDate startDate, LocalDate endDate, BigDecimal budget, PayoutModel payoutModel,
+            BigDecimal payoutValue, Offer offer) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.budget = budget;
+        this.payoutModel = payoutModel;
+        this.payoutValue = payoutValue;
+        this.offer = offer;
+        offer.addCampaign(this);
+    }
+
+    public void activate(){
+        if (status != (CampaignStatus.DRAFT) && 
+            status != (CampaignStatus.PAUSED)) {
+                throw new CamaignStatusException("Impossible d'activer cette campagne");
+        }
+
+        if (endDate.isBefore(LocalDate.now())) {
+            throw new CamaignStatusException("Impossible d'activer une campagne terminée");
+        }
+
+        for (Campaign campaign : offer.getCampaigns()) {
+            if (campaign != this &&
+                campaign.getStatus() == CampaignStatus.ACTIVE) {
+
+                campaign.pause();
+            }
+        }
+        this.status = CampaignStatus.ACTIVE;
+    }
+
+    public void pause(){
+        if (status.equals(CampaignStatus.ACTIVE)) {
+                this.status = CampaignStatus.PAUSED;
+                return ;
+        }
+        throw new CamaignStatusException("Impossible de faire ce changementt dans le status");
+    }
+
+    public void complete(){
+        if (status.equals(CampaignStatus.ACTIVE) || 
+            status.equals(CampaignStatus.PAUSED)) {
+                this.status = CampaignStatus.ENDED;
+                return ;
+        }
+        throw new CamaignStatusException("Impossible de faire ce changementt dans le status");
+    }
 }
