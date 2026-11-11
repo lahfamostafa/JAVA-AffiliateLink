@@ -32,12 +32,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(OfferAlreadyExistsException.class)
-    public ResponseEntity<String> handleOfferAlreadyExists(OfferAlreadyExistsException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    public ResponseEntity<Map<String,String>> handleOfferAlreadyExists(OfferAlreadyExistsException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(OfferNotExistsException.class)
-    public ResponseEntity<String> handleOfferNotExists(OfferNotExistsException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<Map<String,String>> handleOfferNotExists(OfferNotExistsException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(CamaignStatusException.class)
+    public ResponseEntity<Map<String,String>> handleCampaignStatus(CamaignStatusException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
     }
 }
