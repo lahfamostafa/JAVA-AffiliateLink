@@ -1,51 +1,61 @@
+
 package com.affiliateLink.offer.Entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.affiliateLink.exception.CamaignStatusException;
+import com.affiliateLink.exception.CampaignStatusException;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Entity 
+@Entity
 @Table(name = "campaigns")
-@Getter 
+@Getter
 public class Campaign {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column (name = "start_date", nullable = false)
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    @Column (name = "end_date", nullable = false)
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Column (nullable = false, precision = 12, scale = 2)
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal budget;
 
     @Enumerated(EnumType.STRING)
-    @Column (name = "payout_model", nullable = false)
+    @Column(name = "payout_model", nullable = false)
     private PayoutModel payoutModel;
 
-    @Column (name = "payout_value", nullable = false, precision = 12, scale = 2)
+    @Column(name = "payout_value", nullable = false, precision = 12, scale = 2)
     private BigDecimal payoutValue;
 
     @Enumerated(EnumType.STRING)
-    @Column (nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private CampaignStatus status = CampaignStatus.DRAFT;
 
-    @ManyToOne(fetch = FetchType.LAZY , optional = false)
-    @JoinColumn (name = "offer_id",nullable = false)
-    private Offer offer ;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "offer_id", nullable = false)
+    private Offer offer;
 
-    public Campaign(String name, LocalDate startDate, LocalDate endDate, BigDecimal budget, PayoutModel payoutModel,
-            BigDecimal payoutValue, Offer offer) {
+    protected Campaign() {}
+
+    public Campaign(
+            String name,
+            LocalDate startDate,
+            LocalDate endDate,
+            BigDecimal budget,
+            PayoutModel payoutModel,
+            BigDecimal payoutValue,
+            Offer offer) {
+
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -56,40 +66,31 @@ public class Campaign {
         offer.addCampaign(this);
     }
 
-    public void activate(){
-        if (status != (CampaignStatus.DRAFT) && 
-            status != (CampaignStatus.PAUSED)) {
-                throw new CamaignStatusException("Impossible d'activer cette campagne");
+    public void activate() {
+        if (status != CampaignStatus.DRAFT && status != CampaignStatus.PAUSED) {
+            throw new CampaignStatusException("Impossible d'activer cette campagne"
+            );
         }
 
         if (endDate.isBefore(LocalDate.now())) {
-            throw new CamaignStatusException("Impossible d'activer une campagne terminée");
+            throw new CampaignStatusException("Impossible d'activer une campagne terminée");
         }
 
-        for (Campaign campaign : offer.getCampaigns()) {
-            if (campaign != this &&
-                campaign.getStatus() == CampaignStatus.ACTIVE) {
-
-                campaign.pause();
-            }
-        }
         this.status = CampaignStatus.ACTIVE;
     }
 
-    public void pause(){
-        if (status.equals(CampaignStatus.ACTIVE)) {
-                this.status = CampaignStatus.PAUSED;
-                return ;
+    public void pause() {
+        if (status != CampaignStatus.ACTIVE) {
+            throw new CampaignStatusException("Seule une campagne ACTIVE peut être mise en pause");
         }
-        throw new CamaignStatusException("Impossible de faire ce changementt dans le status");
+        this.status = CampaignStatus.PAUSED;
     }
 
-    public void complete(){
-        if (status.equals(CampaignStatus.ACTIVE) || 
-            status.equals(CampaignStatus.PAUSED)) {
-                this.status = CampaignStatus.ENDED;
-                return ;
+    public void end() {
+        if (status != CampaignStatus.ACTIVE && status != CampaignStatus.PAUSED) {
+            throw new CampaignStatusException("Seule une campagne ACTIVE ou PAUSED peut être terminée");
         }
-        throw new CamaignStatusException("Impossible de faire ce changementt dans le status");
+
+        this.status = CampaignStatus.ENDED;
     }
 }
