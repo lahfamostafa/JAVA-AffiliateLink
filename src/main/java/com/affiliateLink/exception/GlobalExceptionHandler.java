@@ -31,6 +31,11 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(ProfileNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleProfileNotFound(ProfileNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
+    }
+
     @ExceptionHandler(OfferAlreadyExistsException.class)
     public ResponseEntity<Map<String,String>> handleOfferAlreadyExists(OfferAlreadyExistsException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.affiliateLink.profile.Entity.Publisher;
 import com.affiliateLink.profile.Repository.ProfileRepository;
 import com.affiliateLink.profile.Repository.PublisherRepository;
+import com.affiliateLink.profile.dto.PublisherRequest;
 
 @Service 
 public class PublisherService {
@@ -22,9 +23,9 @@ public class PublisherService {
         this.profileService = profileService;
     }
 
-    public Publisher save(String email,String firstName , String lastName , String niche , String bio , String country){
-        profileService.validateEmailAvailability(email);
-        Publisher publisher = new Publisher(email, firstName, lastName, niche, bio, country);
+    public Publisher save(PublisherRequest request){
+        profileService.validateEmailAvailability(request.email());
+        Publisher publisher = new Publisher(request.email(), request.firstName(), request.lastName(), request.niche(), request.bio(), request.country());
         return profileRepository.save(publisher);
     }
 

@@ -109,6 +109,24 @@ public class CampaignService {
         }
     }
 
+    @Transactional
+public void pauseActiveCampaignsByAdvertiser(Long advertiserId) {
+
+    List<Campaign> campaigns =
+        campaignRepository.findByOffer_AdvertiserIdAndStatus(
+            advertiserId,
+            CampaignStatus.ACTIVE
+        );
+
+    System.out.println("Campagnes trouvées : " + campaigns.size());
+
+    for (Campaign campaign : campaigns) {
+        campaign.pause();
+    }
+}
+
+
+
     private CampaignResponse toResponse(Campaign campaign) {
 
         return new CampaignResponse(

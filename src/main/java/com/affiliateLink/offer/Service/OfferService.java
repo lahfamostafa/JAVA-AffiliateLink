@@ -39,7 +39,7 @@ public class OfferService {
             throw new OfferAlreadyExistsException("Cette offre existe déjà pour cet annonceur");
         }
         if (!impl.isActiveAdvertiser(request.advertiserId())) {
-            throw new IllegalArgumentException("Annonceur introuvable ou désactivé");
+            throw new ProfileNotFoundException("Annonceur introuvable ou désactivé");
         }
         Set<Tag> tags = tagService.getOrCreateTags(request.tags());
 
