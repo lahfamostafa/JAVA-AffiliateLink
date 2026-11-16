@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.affiliateLink.profile.Entity.Advertiser;
 import com.affiliateLink.profile.Repository.AdvertiserRepository;
 import com.affiliateLink.profile.Repository.ProfileRepository;
+import com.affiliateLink.profile.dto.AdvertiserRequest;
 
 @Service 
 public class AdvertiserService {
@@ -22,9 +23,9 @@ public class AdvertiserService {
         this.profileService = profileService;
     }
 
-    public Advertiser save(String email , String companyName , String sector , String website){
-        profileService.validateEmailAvailability(email);
-        Advertiser advertiser = new Advertiser(email, companyName, sector, website);
+    public Advertiser save(AdvertiserRequest request){
+        profileService.validateEmailAvailability(request.email());
+        Advertiser advertiser = new Advertiser(request.email(), request.companyName(), request.sector(), request.website());
         return profileRepository.save(advertiser);
     }
 

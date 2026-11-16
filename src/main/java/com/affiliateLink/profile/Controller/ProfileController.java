@@ -25,13 +25,13 @@ public class ProfileController {
     @PostMapping("/publishers")
     @ResponseStatus(HttpStatus.CREATED)
     public Publisher createPublisher(@Valid @RequestBody PublisherRequest request) {
-        return publisherService.save(request.email(), request.firstName(), request.lastName(), request.niche(), request.bio(), request.country());
+        return publisherService.save(request);
     }
     
     @PostMapping("/advertisers")
     @ResponseStatus(HttpStatus.CREATED)
     public Advertiser createAdvertiser(@Valid  @RequestBody AdvertiserRequest request) {        
-        return advertiserService.save(request.email(), request.companyName(), request.sector(), request.website());
+        return advertiserService.save(request);
     }
     
     @GetMapping("/publishers")

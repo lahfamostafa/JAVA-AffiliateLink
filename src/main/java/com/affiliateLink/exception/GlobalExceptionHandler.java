@@ -31,6 +31,11 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(ProfileNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleProfileNotFound(ProfileNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
+    }
+
     @ExceptionHandler(OfferAlreadyExistsException.class)
     public ResponseEntity<Map<String,String>> handleOfferAlreadyExists(OfferAlreadyExistsException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
@@ -41,8 +46,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
     }
 
-    @ExceptionHandler(CamaignStatusException.class)
-    public ResponseEntity<Map<String,String>> handleCampaignStatus(CamaignStatusException ex){
+    @ExceptionHandler(CampaignStatusException.class)
+    public ResponseEntity<Map<String,String>> handleCampaignStatus(CampaignStatusException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
+    }
+    
+    @ExceptionHandler(CampaignNotExistsException.class)
+    public ResponseEntity<Map<String,String>> handleCampaignNotExists(CampaignNotExistsException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
+    }
+    
+    @ExceptionHandler(CampaignAlreadyExistsException.class)
+    public ResponseEntity<Map<String,String>> handleCampaignAlreadyExists(CampaignAlreadyExistsException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
     }
 }
