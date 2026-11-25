@@ -15,12 +15,10 @@ public class ProfileSuspendedListener {
         this.campaignService = campaignService;
     }
 
-    @ApplicationModuleListener
-public void on(ProfileSuspended event) {
-    System.out.println("EVENT RECU : " + event.profileId());
-
-    campaignService.pauseActiveCampaignsByAdvertiser(
-        event.profileId()
-    );
-}
+    @ApplicationModuleListener 
+    public void on(ProfileSuspended event){
+        campaignService.pauseActiveCampaignsByAdvertiser(
+            event.profileId()
+        );
+    }
 }

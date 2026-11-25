@@ -1,6 +1,7 @@
 
 package com.affiliateLink.offer.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -110,22 +111,13 @@ public class CampaignService {
     }
 
     @Transactional
-public void pauseActiveCampaignsByAdvertiser(Long advertiserId) {
+    public void pauseActiveCampaignsByAdvertiser(Long advertiserId){
+        List<Campaign> campaigns = campaignRepository.findByOffer_AdvertiserIdAndStatus(advertiserId, CampaignStatus.ACTIVE);
 
-    List<Campaign> campaigns =
-        campaignRepository.findByOffer_AdvertiserIdAndStatus(
-            advertiserId,
-            CampaignStatus.ACTIVE
-        );
-
-    System.out.println("Campagnes trouvées : " + campaigns.size());
-
-    for (Campaign campaign : campaigns) {
-        campaign.pause();
+        for (Campaign campaign : campaigns) {
+            campaign.pause();
+        }
     }
-}
-
-
 
     private CampaignResponse toResponse(Campaign campaign) {
 
@@ -140,5 +132,9 @@ public void pauseActiveCampaignsByAdvertiser(Long advertiserId) {
             campaign.getPayoutValue(),
             campaign.getStatus()
         );
+    }
+
+    public List<CampaignResponse> findByDateAndStatus(LocalDate date1,LocalDate date2, CampaignStatus status){
+        return campaignRepository.findByStartDateBetweenAndStatus(date1, date2, status).stream().map(this::toResponse).toList();
     }
 }
